@@ -1,7 +1,7 @@
 import pygame
 from gl import Renderer, POINTS, LINES, TRIANGLES
 from model import Model
-from shaders import vertexShader, fragmentShader
+from shaders import rainbowFragmentShader, vertexShader, fragmentShader
 from Camera import Camera
 
 class GraphicsEngine:
@@ -30,7 +30,9 @@ class GraphicsEngine:
         self.model.translation = [0, -1, 0]
         self.model.scale = [0.5, 0.5, 0.5]
         self.model.vertexShader = vertexShader
-        self.model.fragmentShader = fragmentShader
+        self.model.fragmentShader = rainbowFragmentShader  
+        
+        self.renderer.models.append(self.model)
         
         self.renderer.models.append(self.model)
         

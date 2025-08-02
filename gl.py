@@ -216,6 +216,13 @@ class Renderer(object):
             self.activeFragmentShader = model.fragmentShader
 
             vertexBuffer = []
+
+            if self.activeFragmentShader:
+                kwargs = {
+                "color": self.currColor,
+                #"texCoords": texCoords,
+            }
+            color = self.activeFragmentShader(**kwargs)
             
             # Procesar vértices con shaders
             for i in range(0, len(model.vertices), 3):
