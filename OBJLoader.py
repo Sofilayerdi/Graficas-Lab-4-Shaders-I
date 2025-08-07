@@ -1,39 +1,37 @@
+import numpy as np
+
 class OBJ:
     def __init__(self, filename):
         self.vertices = []
-        self.texCoords = []
-        self.faces = []
+        self.texcoords = []
+        self.normals = []
+        self.faces = []  # Cada cara almacenará (v, vt, vn)
         self.load(filename)
         
     def load(self, filename):
         with open(filename) as f:
             for line in f:
-                if line.startswith('v '):
+                if line.startswith('v '):  # Vértices geométricos
                     vertex = list(map(float, line.strip().split()[1:4]))
                     self.vertices.extend(vertex)
-                elif line.startswith('vt '):
-                    texCoord = list(map(float, line.strip().split()[1:3]))
-                    self.texCoords.extend(texCoord)
-                elif line.startswith('f '):
+                elif line.startswith('vn '):  # Normales
+                    normal = list(map(float, line.strip().split()[1:4]))
+                    self.normals.extend(normal)
+                elif line.startswith('f '):  # Caras
                     face_vertices = line.strip().split()[1:]
-                    if len(face_vertices) == 3: 
+                    if len(face_vertices) == 3:  # Triángulos
                         face = []
-                        tex_face = []
                         for v in face_vertices:
                             parts = v.split('/')
-                            vertex_index = int(parts[0]) - 1
-                            tex_index = int(parts[1]) - 1 if len(parts) > 1 and parts[1] else -1
-                            face.append(vertex_index)
-                            tex_face.append(tex_index)
-                        self.faces.append((face, tex_face))
-                    elif len(face_vertices) > 3: 
+                            vertex_index = int(parts[0]) - 1  # v
+                            normal_index = int(parts[2]) - 1 if len(parts) > 2 and parts[2] else None  # vn
+                            face.append((vertex_index, normal_index))
+                        self.faces.append(face)
+                    elif len(face_vertices) > 3:  # Polígonos (se triangulan)
                         for i in range(1, len(face_vertices)-1):
-                            face = []
-                            tex_face = []
-                            for idx in [0, i, i+1]:
-                                parts = face_vertices[idx].split('/')
-                                vertex_index = int(parts[0]) - 1
-                                tex_index = int(parts[1]) - 1 if len(parts) > 1 and parts[1] else -1
-                                face.append(vertex_index)
-                                tex_face.append(tex_index)
-                            self.faces.append((face, tex_face))
+                            face = [
+                                (int(face_vertices[0].split('/')[0]) - 1, int(face_vertices[0].split('/')[2]) - 1 if len(face_vertices[0].split('/')) > 2 else None),
+                                (int(face_vertices[i].split('/')[0]) - 1, int(face_vertices[i].split('/')[2]) - 1 if len(face_vertices[i].split('/')) > 2 else None),
+                                (int(face_vertices[i+1].split('/')[0]) - 1, int(face_vertices[i+1].split('/')[2]) - 1 if len(face_vertices[i+1].split('/')) > 2 else None)
+                            ]
+                            self.faces.append(face)
