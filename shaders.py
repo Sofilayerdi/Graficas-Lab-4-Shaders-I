@@ -97,17 +97,17 @@ def RainbowShader(**kwargs):
     pos = (u * 0.3 + v * 0.6 + w * 0.1)
     
     if pos < 0.166:
-        r, g, b = 1.0, 0.0, 0.0    # Rojo
+        r, g, b = 1.0, 0.0, 0.0    
     elif pos < 0.333:
-        r, g, b = 1.0, 0.5, 0.0    # Naranja
+        r, g, b = 1.0, 0.5, 0.0    
     elif pos < 0.5:
-        r, g, b = 1.0, 1.0, 0.0    # Amarillo
+        r, g, b = 1.0, 1.0, 0.0    
     elif pos < 0.666:
-        r, g, b = 0.0, 1.0, 0.0    # Verde
+        r, g, b = 0.0, 1.0, 0.0    
     elif pos < 0.833:
-        r, g, b = 0.0, 0.0, 1.0    # Azul
+        r, g, b = 0.0, 0.0, 1.0    
     else:
-        r, g, b = 0.5, 0.0, 0.5    # Violeta
+        r, g, b = 0.5, 0.0, 0.5    
     
     return [r, g, b]
 
@@ -115,22 +115,18 @@ def oceanShader(**kwargs):
     A, B, C = kwargs["verts"]
     u, v, w = kwargs["bCoords"]
     
-    # Coordenadas de textura simuladas
     tx = u * 10
     ty = v * 10
     
-    # Patrón de onda
     wave1 = math.sin(tx * 2 + ty) * 0.5
     wave2 = math.sin(tx * 1.5 - ty * 2) * 0.3
     wave = wave1 + wave2
     
-    # Color base azul con variación
     base_blue = 0.6 + wave * 0.2
     r = 0.1
     g = 0.3 + wave * 0.1
     b = min(1.0, base_blue)
     
-    # Highlight basado en normales
     nA = [A[3], A[4], A[5]]
     nB = [B[3], B[4], B[5]]
     nC = [C[3], C[4], C[5]]
@@ -157,7 +153,7 @@ def discoShader(**kwargs):
     
     rings = math.sin(dist * 50)  
     
-    r = abs(math.sin(dist * 20))  #
+    r = abs(math.sin(dist * 20))  
     g = (rings + 1) / 2          
     b = 1 - dist                 
     
@@ -167,30 +163,24 @@ def fireShader(**kwargs):
     A, B, C = kwargs["verts"]
     u, v, w = kwargs["bCoords"]
     
-    # Base de las llamas (zona más caliente)
-    flame_base = 1.0 - v  # Más intenso en la parte inferior
+    flame_base = 1.0 - v  
     
-    # Patrón de llamas con ruido fractal
     noise1 = math.sin(u * 10.0 + v * 20.0) * 0.5
     noise2 = math.sin(u * 7.0 - v * 15.0) * 0.3
     noise3 = math.sin(u * 15.0 + v * 25.0) * 0.2
     combined_noise = (noise1 + noise2 + noise3) * v
     
-    # Forma de las llamas
     flame_shape = flame_base * (1.0 + combined_noise)
     
-    # Gradiente de color (de amarillo a rojo)
-    r = min(1.0, flame_shape * 1.2)  # Componente roja
-    g = flame_shape * 0.6             # Componente verde
-    b = flame_shape * 0.1             # Componente azul
+    r = min(1.0, flame_shape * 1.2)  
+    g = flame_shape * 0.6             
+    b = flame_shape * 0.1             
     
-    # Zona más caliente (núcleo de la llama)
     hot_core = max(0.0, flame_shape - 0.7) * 2.0
     r += hot_core * 0.5
     g += hot_core * 0.3
     
-    # Efecto de chispas aleatorias
     if random.random() > 0.98:
-        r, g, b = 1.0, 1.0, 0.8  # Destellos blancos
+        r, g, b = 1.0, 1.0, 0.8  
     
     return [r, g, b]
